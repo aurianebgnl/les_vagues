@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey),
       ),
 
-      initialRoute: '/detailspot/id', // Page de démarrage
+      initialRoute: '/', // Page de démarrage
       routes: {
         '/': (context) => MyHomePage(title: 'Les Vagues'),
         '/detailspot/id': (context) => DetailSpotPage(spot: hossegor),
