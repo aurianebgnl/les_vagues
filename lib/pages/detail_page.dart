@@ -94,6 +94,6 @@ class DetailSpotPage extends StatelessWidget {
         onTap: (index) {
           // navigation future
         },
-    );
+    ));
   }
 }

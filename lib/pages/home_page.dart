@@ -17,6 +17,28 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: MyTopNav(),
       body : Container(
+        child : Row(
+          children: [
+            Column(
+              children: [
+                Image.network(
+                "https://upload.wikimedia.org/wikipedia/commons/0/0a/Surf_at_Hossegor.jpg",
+                fit: BoxFit.cover,
+                ),
+                Text('Ville, Pays'), Text('Nom du spot')
+              ]
+              ),
+            Column(
+              children: [
+                Image.network(
+                "https://upload.wikimedia.org/wikipedia/commons/0/0a/Surf_at_Hossegor.jpg",
+                fit: BoxFit.cover,
+                ),
+                Text('Ville, Pays'), Text('Nom du spot')
+              ]
+              ),  
+        ]),
+        //const SizedBox(height: 16),
 
       ),
       bottomNavigationBar: MyBottomNav(currentIndex: 0, onTap: (index) {}),
