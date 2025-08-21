@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:les_vagues/models/spot.dart';
+import 'package:les_vagues/pages/ajout_page.dart';
 import 'pages/detail_page.dart';
 import 'pages/home_page.dart';
 //import 'pages/ajout_page.dart';
@@ -19,6 +20,7 @@ Spot hossegor = const Spot(
   season: "Juin - Septembre",
   mapUrl: "https://upload.wikimedia.org/wikipedia/commons/0/0a/Surf_at_Hossegor.jpg",
 );
+// FIN DU TEMPORAIRE
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -36,7 +38,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => MyHomePage(title: 'Les Vagues'),
         '/detailspot/id': (context) => DetailSpotPage(spot: hossegor),
-        //'/add': (context) => AjoutSpot(title: 'Les Vagues'),
+        '/add': (context) => AjoutSpotPage(spot: hossegor),
         //'/search' : (context) => RecherchePage(title: 'Les Vagues'),
         //'/profile' : (context) => ProfilPage(title: 'Les Vagues'),
       },
