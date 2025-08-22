@@ -31,10 +31,10 @@ class SpotHeader extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(spot.rating,
+                  Text("⭐ ${spot.rating.toString()}",
                       //style: Theme.of(context).textTheme.subtitle1
                       ),
-                  Text(spot.dateAdded,
+                  Text("${spot.dateAdded.toLocal()}",
                       //style: Theme.of(context).textTheme.caption
                       ),
                 ],
