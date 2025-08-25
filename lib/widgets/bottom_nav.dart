@@ -35,7 +35,7 @@ class MyBottomNav extends StatelessWidget {
             Navigator.pushNamed(context, '/add');
             break;
           case 3:
-            Navigator.pushNamed(context, '/profile');
+            Navigator.pushNamed(context, '/signUp');
             break;
         }
       },
