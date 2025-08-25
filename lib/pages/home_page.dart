@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:les_vagues/widgets/bottom_nav.dart';
+import 'package:les_vagues/widgets/top_nav.dart';
+import 'package:les_vagues/widgets/dropdown_menu.dart';
+import 'package:les_vagues/models/spot.dart';
+import 'package:les_vagues/pages/detail_page.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
@@ -19,69 +15,264 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  String searchQuery = "";
+  String selectedFilter = "Filtrer";
+  TextEditingController _controller = TextEditingController();
 
-  void _incrementCounter() {
+  List<Spot> spots = [
+    Spot(
+      name: "La Nord",
+      city: "Hossegor",
+      country: "France",
+      imageUrl:
+          "https://upload.wikimedia.org/wikipedia/commons/0/0a/Surf_at_Hossegor.jpg",
+      rating: 5,
+      dateAdded: DateTime(2024, 8, 1),
+      difficulty: "****",
+      waveType: "Beach Break",
+      season: "Juin",
+      mapUrl:
+          "https://upload.wikimedia.org/wikipedia/commons/0/0a/Surf_at_Hossegor.jpg",
+    ),
+    Spot(
+      name: "Grande Plage",
+      city: "Biarritz",
+      country: "France",
+      imageUrl:
+          "https://commons.wikimedia.org/wiki/Special:FilePath/Biarritz%20-%20c%C3%B4te%20des%20Basques.jpg",
+      rating: 4,
+      dateAdded: DateTime(2024, 8, 1),
+      difficulty: "***",
+      waveType: "Beach Break",
+      season: "Mars",
+      mapUrl:
+          " https://commons.wikimedia.org/wiki/Special:FilePath/Biarritz%20-%20c%C3%B4te%20des%20Basques.jpg",
+    ),
+    Spot(
+      name: "Pointe Parlementia",
+      city: "Guéthary",
+      country: "France",
+      imageUrl:
+          "https://commons.wikimedia.org/wiki/Special:FilePath/Lacanau%20oc%C3%A9an%20surfeurs%20(2).jpg",
+      rating: 4,
+      dateAdded: DateTime(2024, 8, 1),
+      difficulty: "****",
+      waveType: "Beach Break",
+      season: "Juin",
+      mapUrl:
+          "https://commons.wikimedia.org/wiki/Special:FilePath/Pointe_Parlementia_2019_Bas_PL3.jpg",
+    ),
+    Spot(
+      name: "La Plage Super Sud",
+      city: "Lacanau",
+      country: "France",
+      imageUrl:
+          "https://upload.wikimedia.org/wikipedia/commons/0/0a/Surf_at_Hossegor.jpg",
+      rating: 5,
+      dateAdded: DateTime(2024, 8, 1),
+      difficulty: "****",
+      waveType: "Beach Break",
+      season: "Avril",
+      mapUrl:
+          "https://commons.wikimedia.org/wiki/Special:FilePath/Lacanau%20oc%C3%A9an%20surfeurs%20(2).jpg",
+    ),
+    Spot(
+      name: "Les Cavaliers",
+      city: "Anglet",
+      country: "France",
+      imageUrl:
+          "https://commons.wikimedia.org/wiki/Special:FilePath/Anglet-cavaliers-beach-2014.jpg",
+      rating: 4,
+      dateAdded: DateTime(2024, 8, 1),
+      difficulty: "****",
+      waveType: "Beach Break",
+      season: "Juin",
+      mapUrl:
+          "https://commons.wikimedia.org/wiki/Special:FilePath/Anglet-cavaliers-beach-2014.jpg",
+    ),
+    Spot(
+      name: "Plage du Santocha",
+      city: "Capbreton",
+      country: "France",
+      imageUrl:
+          "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/12/79/f0/30/plage-du-santocha.jpg?w=1200&h=1200&s=1",
+      rating: 3,
+      dateAdded: DateTime(2024, 8, 1),
+      difficulty: "**",
+      waveType: "Beach Break",
+      season: "Juin",
+      mapUrl:
+          "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/12/79/f0/30/plage-du-santocha.jpg?w=1200&h=1200&s=1",
+    ),
+    Spot(
+      name: "Plage de la Torche",
+      city: "La Torche",
+      country: "France",
+      imageUrl:
+          "https://commons.wikimedia.org/wiki/Special:FilePath/Plage_de_la_Torche.jpg",
+      rating: 5,
+      dateAdded: DateTime(2024, 8, 1),
+      difficulty: "***",
+      waveType: "Beach Break",
+      season: "Juin",
+      mapUrl:
+          "https://commons.wikimedia.org/wiki/Special:FilePath/Plage_de_la_Torche.jpg",
+    ),
+    Spot(
+      name: "Port Bara",
+      city: "Quiberon",
+      country: "France",
+      imageUrl:
+          "https://upload.wikimedia.org/wikipedia/commons/9/95/Quiberon_Surf.jpg",
+      rating: 5,
+      dateAdded: DateTime(2024, 8, 1),
+      difficulty: "****",
+      waveType: "Beach Break",
+      season: "Septembre",
+      mapUrl:
+          "https://upload.wikimedia.org/wikipedia/commons/9/95/Quiberon_Surf.jpg",
+    ),
+    Spot(
+      name: "Saint Barbe",
+      city: "Hossegor",
+      country: "France",
+      imageUrl:
+          "https://commons.wikimedia.org/wiki/Special:FilePath/Lafitenia%20Bay%20(25951790728).jpg",
+      rating: 3,
+      dateAdded: DateTime(2024, 8, 1),
+      difficulty: "***",
+      waveType: "Beach Break",
+      season: "Juin",
+      mapUrl:
+          "https://commons.wikimedia.org/wiki/Special:FilePath/Lafitenia%20Bay%20(25951790728).jpg",
+    ),
+    Spot(
+      name: "Plage des Carernes",
+      city: "Seignosse",
+      country: "France",
+      imageUrl:
+          "https://www.seignosse-surf-school.com/wp-content/uploads/2020/05/seignosse_surf_school_ecole_de_surf_LA_NORD-800x534.jpg",
+      rating: 5,
+      dateAdded: DateTime(2024, 8, 1),
+      difficulty: "***",
+      waveType: "Beach Break",
+      season: "Juin",
+      mapUrl:
+          "https://www.seignosse-surf-school.com/wp-content/uploads/2020/05/seignosse_surf_school_ecole_de_surf_LA_NORD-800x534.jpg",
+    ),
+  ];
+
+  void _applyFilter(String option) {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      if (option == "Le + récent") {
+        spots.sort((a, b) => b.dateAdded.compareTo(a.dateAdded));
+      } else if (option == "La meilleure note") {
+        spots.sort((a, b) => b.rating.compareTo(a.rating));
+      } else if (option == "Par ordre alphabétique") {
+        spots.sort((a, b) => a.city.compareTo(b.city));
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+      appBar: MyTopNav(),
+      body: Column(
+        children: [
+          // Barre de recherche
+          Row(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    controller: _controller,
+                    decoration: InputDecoration(
+                      hintText: "Rechercher...",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.search),
+                onPressed: () {
+                  setState(() {
+                    searchQuery = _controller.text;
+                  });
+                  print("Recherche : $searchQuery");
+                },
+              ),
+            ],
+          ),
+
+          // Filtrage
+          Row(
+            children: [
+              Text('Affichage : $selectedFilter'),
+              const Spacer(),
+              MyDropdownMenu(
+                initialValue: selectedFilter,
+                onSelected: (value) {
+                  setState(() {
+                    selectedFilter = value ?? "Filtrer";
+                  });
+                  _applyFilter(selectedFilter);
+                  print("Filtre choisi : $selectedFilter");
+                },
+              ),
+            ],
+          ),
+
+          // La grille des spots
+          Expanded(
+            child: GridView.count(
+              crossAxisCount: 2,
+              crossAxisSpacing: 8,
+              mainAxisSpacing: 8,
+              padding: const EdgeInsets.all(8),
+              children: spots.map((spot) {
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailSpotPage(spot: spot),
+                      ),
+                    );
+                  },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.network(
+                        spot.imageUrl,
+                        width: 150,
+                        height: 100,
+                        fit: BoxFit.cover,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '${spot.city}, ${spot.country}',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(spot.name),
+                    ],
+                  ),
+                );
+              }).toList(),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      bottomNavigationBar: MyBottomNav(
+        currentIndex: 0,
+        onTap: (index) {
+          // navigation future
+        },
+      )
     );
   }
 }
