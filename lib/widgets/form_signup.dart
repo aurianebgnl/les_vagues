@@ -1,5 +1,100 @@
 import 'package:flutter/material.dart';
 
+class CustomInputField extends StatelessWidget {
+  final TextEditingController controller;
+  final String label;
+  final String hintText;
+  final IconData icon;
+  final bool obscureText;
+  final String? Function(String?)? validator;
+
+  const CustomInputField({
+    super.key,
+    required this.controller,
+    required this.label,
+    required this.hintText,
+    required this.icon,
+    this.obscureText = false,
+    this.validator,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      //height: MediaQuery.of(context).size.height * 0.11,
+      margin: const EdgeInsets.symmetric(vertical: 5),
+      child: Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(bottom: 5),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              label,
+              textAlign: TextAlign.start,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          Container(
+            //height: MediaQuery.of(context).size.height * 0.06,
+            margin: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width * 0.01,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: Colors.black, width: 1),
+              borderRadius: BorderRadius.circular(30),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: const Offset(0, 5),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 20),
+                    child: TextFormField(
+                      controller: controller,
+                      obscureText: obscureText,
+                      validator: validator,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      decoration: InputDecoration(
+                        hintText: hintText,
+                        hintStyle: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 50,
+                  width: 50,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Icon(icon, size: 30, color: Colors.black),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class InputSection extends StatefulWidget {
   const InputSection({super.key});
 
@@ -8,6 +103,8 @@ class InputSection extends StatefulWidget {
 }
 
 class _InputSectionState extends State<InputSection> {
+  final _formKey = GlobalKey<FormState>();
+
   final TextEditingController emailField = TextEditingController();
   final TextEditingController loginField = TextEditingController();
   final TextEditingController nameField = TextEditingController();
@@ -24,312 +121,84 @@ class _InputSectionState extends State<InputSection> {
   //}
 
   @override
+  void dispose() {
+    emailField.dispose();
+    loginField.dispose();
+    nameField.dispose();
+    passwordField.dispose();
+    super.dispose();
+  }
+
+  void _signUp() {
+    if (_formKey.currentState!.validate()) {
+      //si tt est valide -> enregistrement dans Firebase
+      print("Formulaire valide -> Enregistrement...");
+    } else {
+      print("Formulaire invalide !");
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 360,
-      margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+    return Form(
+      key: _formKey,
       child: Column(
         children: [
-          //EMAIL
-          Container(
-            height: MediaQuery.of(context).size.height * 0.11,
-            child: Column(
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(bottom: 5),
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Adresse mail*",
-                    textAlign: TextAlign.start,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.06,
-                  margin: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width * 0.01,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: Colors.black, width: 1),
-                    borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          margin: const EdgeInsets.only(left: 20),
-                          child: TextField(
-                            controller: emailField,
-                            style: const TextStyle(
-                              fontSize: 15,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            obscureText: false,
-                            decoration: InputDecoration(
-                              hintText: "Entrez votre email",
-                              hintStyle: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              border: InputBorder.none,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 50,
-                        width: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: const Icon(
-                          Icons.mail_outline_rounded,
-                          size: 30,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+          CustomInputField(
+            controller: emailField,
+            label: "Adresse mail*",
+            hintText: "Entrez votre email",
+            icon: Icons.mail_rounded,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "L'email est obligatoire";
+              }
+              if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                return "Entrez un email valide";
+              }
+              return null;
+            },
           ),
-          Container(
-            // LOGIN
-            height: MediaQuery.of(context).size.height * 0.11,
-            child: Column(
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(bottom: 5),
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Login*",
-                    textAlign: TextAlign.start,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.06,
-                  margin: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width * 0.01,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: Colors.black, width: 1),
-                    borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          margin: const EdgeInsets.only(left: 20),
-                          child: TextField(
-                            controller: loginField,
-                            style: const TextStyle(
-                              fontSize: 15,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            obscureText: false,
-                            decoration: InputDecoration(
-                              hintText: "Entrez votre login",
-                              hintStyle: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              border: InputBorder.none,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 50,
-                        width: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: const Icon(
-                          Icons.mail_outline_rounded,
-                          size: 30,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+          CustomInputField(
+            controller: loginField,
+            label: "Login*",
+            hintText: "Entrez votre login",
+            icon: Icons.person_rounded,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "Le login est obligatoire";
+              }
+              return null;
+            },
           ),
-          Container(
-            // NOM
-            height: MediaQuery.of(context).size.height * 0.11,
-            child: Column(
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(bottom: 5),
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Nom*",
-                    textAlign: TextAlign.start,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.06,
-                  margin: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width * 0.01,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: Colors.black, width: 1),
-                    borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          margin: const EdgeInsets.only(left: 20),
-                          child: TextField(
-                            controller: nameField,
-                            style: const TextStyle(
-                              fontSize: 15,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            obscureText: false,
-                            decoration: InputDecoration(
-                              hintText: "Entrez votre nom",
-                              hintStyle: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              border: InputBorder.none,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 50,
-                        width: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: const Icon(
-                          Icons.mail_outline_rounded,
-                          size: 30,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+          CustomInputField(
+            controller: nameField,
+            label: "Nom*",
+            hintText: "Entrez votre nom",
+            icon: Icons.person_rounded,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "Le nom est obligatoire";
+              }
+              return null;
+            },
           ),
-          Container(
-            // PASSWORD
-            height: MediaQuery.of(context).size.height * 0.11,
-            child: Column(
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(bottom: 5),
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Mot de Passe*",
-                    textAlign: TextAlign.start,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.06,
-                  margin: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width * 0.01,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: Colors.black, width: 1),
-                    borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          margin: const EdgeInsets.only(left: 20),
-                          child: TextField(
-                            controller: passwordField,
-                            style: const TextStyle(
-                              fontSize: 15,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              hintText: "Entrez votre mot de passe",
-                              hintStyle: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              border: InputBorder.none,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 50,
-                        width: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: const Icon(
-                          Icons.mail_outline_rounded,
-                          size: 30,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+          CustomInputField(
+            controller: passwordField,
+            label: "Mot de passe*",
+            hintText: "Entrez votre mot de passe (8 caractères minimum)",
+            icon: Icons.key_rounded,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "Le mot de passe est obligatoire";
+              }
+              if (value.length < 8) {
+                return "Minimum 8 caractères";
+              }
+              return null;
+            },
           ),
+          const SizedBox(height: 10),
           Container(
             width: double.infinity,
             height: MediaQuery.of(context).size.height * 0.06,
@@ -338,16 +207,14 @@ class _InputSectionState extends State<InputSection> {
             ),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(250, 250, 185, 45),
+                backgroundColor: Theme.of(context).colorScheme.inversePrimary,
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(30)),
                 ),
               ),
-              onPressed: () {
-                //signUp(); //=> qd on sera relié à FIREBASE
-                print("vous êtes enregistré.e");
-              },
-              child: Text(
+              onPressed: _signUp,
+
+              child: const Text(
                 "S'enregistrer",
                 style: TextStyle(
                   fontSize: 18,
