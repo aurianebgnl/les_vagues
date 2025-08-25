@@ -1,10 +1,12 @@
+import 'package:flutter/material.dart';
+
 class Spot {
   final String name;
   final String city;
   final String country;
   final String imageUrl;
-  final String rating; // tu peux mettre double si tu veux gérer des notes
-  final String dateAdded;
+  final int rating; // tu peux mettre double si tu veux gérer des notes
+  final DateTime dateAdded;
   final String difficulty;
   final String waveType;
   final String season;
