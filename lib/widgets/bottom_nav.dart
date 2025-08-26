@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+//import 'package:firebase_auth/firebase_auth.dart'; => si on utilise Firebase
 
 class MyBottomNav extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTap;
 
+  //simulation état de connexion
+  final bool isLoggedIn;
+
   const MyBottomNav({
     super.key,
     required this.currentIndex,
     required this.onTap,
+    this.isLoggedIn = false,
   });
 
   @override
@@ -34,12 +39,24 @@ class MyBottomNav extends StatelessWidget {
           case 2:
             Navigator.pushNamed(context, '/add');
             break;
-          case 3:
-            //Navigator.pushNamed(context, '/signUp');
-            Navigator.pushNamed(context, '/login');
+          case 3: //sans firebase
+            if (isLoggedIn) {
+              Navigator.pushNamed(context, '/profile');
+            }else{
+              Navigator.pushNamed(context, '/login');
+              //Navigator.pushNamed(context, '/signUp');
+            }
             break;
-        }
-      },
+          //case 3: => avec firebase
+            //final user = FirebaseAuth.instance.currentUser;
+            //if (user != null) {
+              //Navigator.pushNamed(context, '/profile');
+            //} else {
+              //Navigator.pushNamed(context, '/login');
+            //}
+            //break;
+          }
+        },
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Accueil'),
         BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Rechercher'),
@@ -49,3 +66,8 @@ class MyBottomNav extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
