@@ -3,8 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:les_vagues/models/spot.dart';
 import 'package:les_vagues/pages/ajout_page.dart';
-import 'pages/detail_page.dart';
+import 'package:les_vagues/pages/login_page.dart';
 import 'pages/home_page.dart';
+import 'pages/signup_page.dart';
 import 'pages/list_page.dart';
 //import 'pages/ajout_page.dart';
 
@@ -41,6 +42,8 @@ class MyApp extends StatelessWidget {
         // '/': (context) => MyHomePage(title: 'Les Vagues'),
         '/': (context) => MyListPage(title: 'Les Vagues'),
         //'/detailspot/id': (context) => DetailSpotPage(spot: hossegor), => ne s'ecrit pas ici
+        '/login': (context) => LoginPage(title: 'Les Vagues'),
+        //'/signUp': (context) => SignupPage(title: 'Les Vagues'),
         '/add': (context) => AjoutSpotPage(),
         //'/search' : (context) => RecherchePage(title: 'Les Vagues'),
         //'/profile' : (context) => ProfilPage(title: 'Les Vagues'),
