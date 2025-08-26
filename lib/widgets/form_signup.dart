@@ -124,6 +124,8 @@ class _InputSectionState extends State<InputSection> {
   //addUser(userID, userName.text, emailField.text);
   //}
 
+  //Les textes saisis dans vos champs de texte sont stockés dans des variables de type TextEditingController(). Pour récupérer les valeurs de ces champs, il vous suffit d’accéder à la propriété .text de chaque variable et d’utiliser .trim() pour éliminer les espaces superflus en début et fin de chaîne.
+
   @override
   void dispose() {
     emailField.dispose();
