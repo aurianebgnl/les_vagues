@@ -5,21 +5,24 @@ import 'package:les_vagues/models/spot.dart';
 import 'package:les_vagues/pages/ajout_page.dart';
 import 'pages/detail_page.dart';
 import 'pages/home_page.dart';
+import 'pages/list_page.dart';
 //import 'pages/ajout_page.dart';
 
 //TEMPORAIRE, avant de connecter à API ou BDD
-//Spot hossegor = const Spot(
-  //name: "Hossegor",
-  //city: "Hossegor",
-  //country: "France",
-  //imageUrl: "https://upload.wikimedia.org/wikipedia/commons/0/0a/Surf_at_Hossegor.jpg",
+Spot hossegor = Spot(
+  name: "Hossegor",
+  city: "Hossegor",
+  country: "France",
+  imageUrl: "https://upload.wikimedia.org/wikipedia/commons/0/0a/Surf_at_Hossegor.jpg",
+  rating: 5,
   //rating: "★★★★☆ (123 votes)",
+  dateAdded: DateTime(2024, 8, 1),
   //dateAdded: "12/08/2023",
-  //difficulty: "Intermédiaire",
-  //waveType: "Reef Break",
-  //season: "Juin - Septembre",
-  //mapUrl: "https://upload.wikimedia.org/wikipedia/commons/0/0a/Surf_at_Hossegor.jpg",
-//);
+  difficulty: "Intermédiaire",
+  waveType: "Reef Break",
+  season: "Juin - Septembre",
+  mapUrl: "https://upload.wikimedia.org/wikipedia/commons/0/0a/Surf_at_Hossegor.jpg",
+);
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -35,9 +38,10 @@ class MyApp extends StatelessWidget {
 
       initialRoute: '/', // Page de démarrage
       routes: {
-        '/': (context) => MyHomePage(title: 'Les Vagues'),
+        // '/': (context) => MyHomePage(title: 'Les Vagues'),
+        '/': (context) => MyListPage(title: 'Les Vagues'),
         //'/detailspot/id': (context) => DetailSpotPage(spot: hossegor), => ne s'ecrit pas ici
-        '/add': (context) => AjoutSpot(title: 'Les Vagues'),
+        '/add': (context) => AjoutSpotPage(),
         //'/search' : (context) => RecherchePage(title: 'Les Vagues'),
         //'/profile' : (context) => ProfilPage(title: 'Les Vagues'),
       },
