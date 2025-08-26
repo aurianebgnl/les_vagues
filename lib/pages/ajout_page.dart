@@ -8,9 +8,10 @@ import 'package:image_picker/image_picker.dart';
 
 
 class AjoutSpotPage extends StatelessWidget{
-  const AjoutSpotPage({super.key, required this.spot});
+  //const AjoutSpotPage({super.key, required this.spot});
+  const AjoutSpotPage({super.key});
 
-  final Spot spot;
+  //final Spot spot;
 
   @override
   Widget build(BuildContext context) {
@@ -156,8 +157,9 @@ class _AjoutSpotFormState extends State<AjoutSpotForm> {
         city: _locationController.text,
         country: "France", // TO DO à revoir avec le champ location : à séparer ou regrouper ?
         imageUrl: _selectedImage?.path ?? "",
-        rating: _difficulty.toString(),
-        dateAdded: DateTime.now().toIso8601String(),
+        rating: _difficulty.toInt(),
+        dateAdded: DateTime.now(),
+        // dateAdded: DateTime.now().toIso8601String(),
         difficulty: _difficulty.toString(),
         waveType: _waveType ?? "",
         season:
