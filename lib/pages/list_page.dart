@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:les_vagues/widgets/bottom_nav.dart';
 import 'package:les_vagues/widgets/top_nav.dart';
@@ -22,6 +23,7 @@ class _MyListPageState extends State<MyListPage> {
 
   List<Spot> spots = [];
   bool isLoading = true; // indicateur de chargement
+  String? errorMessage; 
 
   @override
   void initState() {
@@ -36,11 +38,18 @@ class _MyListPageState extends State<MyListPage> {
       setState(() {
         spots = fetchedSpots;
         isLoading = false;
+        errorMessage = null;
+      });
+    } on SocketException {
+      setState(() {
+        isLoading = false;
+        errorMessage = "Pas de connexion Internet";
       });
     } catch (e){
       print("Erreur lors du chargement des spots : $e");
       setState(() {
         isLoading = false;
+        errorMessage = e.toString();
       });
     }
   }
@@ -61,6 +70,44 @@ class _MyListPageState extends State<MyListPage> {
       appBar: AppBar(title: Text(widget.title)),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
+          : errorMessage != null
+              ? Center( 
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        errorMessage!.contains("Internet")
+                            ? Icons.wifi_off
+                            : Icons.error,
+                        color: Colors.red,
+                        size: 50,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        errorMessage!,
+                        style: Theme.of(context).textTheme.titleMedium,
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        errorMessage!,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            isLoading = true;
+                            errorMessage = null;
+                          });
+                          _loadSpots();
+                        },
+                        child: const Text("Réessayer"),
+                      ),
+                    ],
+                  ),
+                )
           : ListView.builder(
               itemCount: spots.length,
               itemBuilder: (context, index) {

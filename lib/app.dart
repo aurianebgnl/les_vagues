@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/', // Page de démarrage
       routes: {
         // '/': (context) => MyHomePage(title: 'Les Vagues'),
-        '/': (context) => MyListPage(title: 'Les Vagues'),
+        '/': (context) => MyHomePage(title: 'Les Vagues'),
         //'/detailspot/id': (context) => DetailSpotPage(spot: hossegor), => ne s'ecrit pas ici
         '/login': (context) => LoginPage(title: 'Les Vagues'),
         //'/signUp': (context) => SignupPage(title: 'Les Vagues'),
