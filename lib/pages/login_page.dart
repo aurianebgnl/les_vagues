@@ -28,7 +28,8 @@ class _LoginPageState extends State<LoginPage> {
       ),
       bottomNavigationBar: MyBottomNav(
         currentIndex: 0, 
-        onTap: (index){}
+        onTap: (index){},
+        isLoggedIn: true, // change en true pour tester le cas connecté
       ),
     );
   }

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:les_vagues/models/spot.dart';
 import 'package:les_vagues/pages/login_page.dart';
+import 'package:les_vagues/pages/profile_page.dart';
 import 'pages/home_page.dart';
 import 'pages/signup_page.dart';
 //import 'pages/ajout_page.dart';
@@ -41,7 +42,7 @@ class MyApp extends StatelessWidget {
         //'/signUp': (context) => SignupPage(title: 'Les Vagues'),
         //'/add': (context) => AjoutSpot(title: 'Les Vagues'),
         //'/search' : (context) => RecherchePage(title: 'Les Vagues'),
-        //'/profile' : (context) => ProfilPage(title: 'Les Vagues'),
+        '/profile' : (context) => ProfilePage(title: 'Les Vagues'),
       },
     );
   }

@@ -98,6 +98,7 @@ class DetailSpotPage extends StatelessWidget {
         onTap: (index) {
           // navigation future
         },
+        isLoggedIn: true, // change en true pour tester le cas connecté
     ));
   }
 }

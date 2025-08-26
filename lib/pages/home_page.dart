@@ -309,6 +309,7 @@ class _MyHomePageState extends State<MyHomePage> {
         onTap: (index) {
           // navigation future
         },
+        isLoggedIn: true, // change en true pour tester le cas connecté
       ),
     );
   }
