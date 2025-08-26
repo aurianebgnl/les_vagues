@@ -162,6 +162,20 @@ class _MyHomePageState extends State<MyHomePage> {
     ),
   ];
 
+  List<Spot> allSpots = [];
+
+  @override
+  void initState() {
+    super.initState();
+    allSpots = List.from(spots);
+  }
+
+  @override
+    void dispose() {
+      _controller.dispose(); // libération mémoire
+      super.dispose();
+  }
+
   void _applyFilter(String option) {
     setState(() {
       if (option == "Le + récent") {
@@ -169,7 +183,7 @@ class _MyHomePageState extends State<MyHomePage> {
       } else if (option == "La meilleure note") {
         spots.sort((a, b) => b.rating.compareTo(a.rating));
       } else if (option == "Par ordre alphabétique") {
-        spots.sort((a, b) => a.city.compareTo(b.city));
+        spots.sort((a, b) => a.city.compareTo(b.city)); //ou a.name si on veut par spot : à voir
       }
     });
   }
@@ -202,6 +216,22 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () {
                   setState(() {
                     searchQuery = _controller.text;
+
+                    if (searchQuery.isEmpty) {
+                      spots = allSpots;
+                    } else {
+                      spots = allSpots.where((spot) {
+                        return spot.name.toLowerCase().contains(
+                              searchQuery.toLowerCase(),
+                            ) ||
+                            spot.city.toLowerCase().contains(
+                              searchQuery.toLowerCase(),
+                            ) ||
+                            spot.country.toLowerCase().contains(
+                              searchQuery.toLowerCase(),
+                            );
+                      }).toList();
+                    }
                   });
                   print("Recherche : $searchQuery");
                 },
@@ -229,7 +259,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
           // La grille des spots
           Expanded(
-            child: GridView.count(
+            child: spots.isEmpty
+              ? const Center(
+                child: Text(
+                  "Aucun spot trouvé",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              )
+            : GridView.count(
               crossAxisCount: 2,
               crossAxisSpacing: 8,
               mainAxisSpacing: 8,
@@ -272,7 +309,7 @@ class _MyHomePageState extends State<MyHomePage> {
         onTap: (index) {
           // navigation future
         },
-      )
+      ),
     );
   }
 }
