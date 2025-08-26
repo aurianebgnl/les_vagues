@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:les_vagues/models/spot.dart';
+import 'package:les_vagues/services/airtable_api.dart';
 import 'package:les_vagues/widgets/bottom_nav.dart';
 import 'package:les_vagues/widgets/top_nav.dart';
 import 'dart:io';
@@ -150,7 +151,7 @@ class _AjoutSpotFormState extends State<AjoutSpotForm> {
     );
   }
 
-  void _submitForm() {
+  void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       final spot = Spot(
         name: _nameController.text,
@@ -166,6 +167,23 @@ class _AjoutSpotFormState extends State<AjoutSpotForm> {
             "${_startDate?.day}/${_startDate?.month} - ${_endDate?.day}/${_endDate?.month}",
         mapUrl: "",
       );
+      
+      try {
+        await AirtableApi().createSpot(spot);
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Spot ajouté avec succès")),
+          );
+          Navigator.pop(context); // retour à la liste
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Erreur: $e")),
+          );
+        }
+      }
 
       // Pour test
       debugPrint("Spot ajouté: ${spot.name}, type: ${spot.waveType}");

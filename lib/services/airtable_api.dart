@@ -34,4 +34,45 @@ class AirtableApi {
       throw Exception('Erreur lors du chargement des spots: ${response.body}');
     }
   }
+
+  Future<void> createSpot(Spot spot) async {
+    final url = Uri.parse('$baseUrl/$table');
+
+    final body = jsonEncode({
+      "records": [
+        {
+          "fields": {
+            "Destination": spot.name,
+            "Destination State/Country": "${spot.city}, ${spot.country}",
+            "Difficulty Level": spot.difficulty.length,
+            "Surf Break": [spot.waveType],
+            "Photos": [
+              {"url": spot.imageUrl}
+            ],
+            "Peak Surf Season Begins": "2024-06-15", // TODO à mapper
+            "Peak Surf Season Ends": "2024-08-22",
+            "Magic Seaweed Link": spot.mapUrl,
+            "Geocode": "TODO : à mapper si besoin",
+          }
+        }
+      ]
+    });
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Authorization': 'Bearer $apiKey',
+        'Content-Type': 'application/json',
+      },
+      body: body,
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print("Spot ajouté avec succès !");
+      } else {
+        throw Exception("Erreur ajout spot: [${response.statusCode}] ${response.body}");
+      }
+  }
+
 }
+
