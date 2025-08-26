@@ -26,7 +26,11 @@ class CustomInputField extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            margin: const EdgeInsets.only(bottom: 5),
+            //margin: const EdgeInsets.only(bottom: 5),
+             margin: EdgeInsets.only(
+              left: MediaQuery.of(context).size.width * 0.06, 
+              bottom: 5,
+            ),
             alignment: Alignment.centerLeft,
             child: Text(
               label,
@@ -37,12 +41,12 @@ class CustomInputField extends StatelessWidget {
           Container(
             //height: MediaQuery.of(context).size.height * 0.06,
             margin: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * 0.01,
+              horizontal: MediaQuery.of(context).size.width * 0.06,
             ),
             decoration: BoxDecoration(
               color: Colors.white,
               border: Border.all(color: Colors.black, width: 1),
-              borderRadius: BorderRadius.circular(30),
+              borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.2),
@@ -82,7 +86,7 @@ class CustomInputField extends StatelessWidget {
                   width: 50,
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(icon, size: 30, color: Colors.black),
                 ),
@@ -153,7 +157,7 @@ class _InputSectionState extends State<InputSection> {
               if (value == null || value.isEmpty) {
                 return "L'email est obligatoire";
               }
-              if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+              if (!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$').hasMatch(value)) {
                 return "Entrez un email valide";
               }
               return null;
@@ -203,13 +207,13 @@ class _InputSectionState extends State<InputSection> {
             width: double.infinity,
             height: MediaQuery.of(context).size.height * 0.06,
             margin: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * 0.01,
+              horizontal: MediaQuery.of(context).size.width * 0.06,
             ),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).colorScheme.inversePrimary,
                 shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(30)),
+                  borderRadius: BorderRadius.all(Radius.circular(12)),
                 ),
               ),
               onPressed: _signUp,

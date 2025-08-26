@@ -2,8 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:les_vagues/models/spot.dart';
+import 'package:les_vagues/pages/login_page.dart';
 import 'pages/home_page.dart';
-import 'pages/signUp_page.dart';
+import 'pages/signup_page.dart';
 //import 'pages/ajout_page.dart';
 
 //TEMPORAIRE, avant de connecter à API ou BDD
@@ -36,8 +37,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => MyHomePage(title: 'Les Vagues'),
         //'/detailspot/id': (context) => DetailSpotPage(spot: hossegor), => ne s'ecrit pas ici
-        //'/login': (context) => ,
-        '/signUp': (context) => SignupPage(title: 'Les Vagues'),
+        '/login': (context) => LoginPage(title: 'Les Vagues'),
+        //'/signUp': (context) => SignupPage(title: 'Les Vagues'),
         //'/add': (context) => AjoutSpot(title: 'Les Vagues'),
         //'/search' : (context) => RecherchePage(title: 'Les Vagues'),
         //'/profile' : (context) => ProfilPage(title: 'Les Vagues'),

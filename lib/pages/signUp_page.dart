@@ -20,7 +20,7 @@ class _SignupPageState extends State<SignupPage> {
       appBar: MyTopNav(),
       body: Column(children: [
           Text('Bonjour, veuillez-vous enregistrer.', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-          Text('Les champs avec une * sont obligatoires'),
+          Text('Les champs avec une * sont obligatoires.'),
           InputSection(),
         ],
       ),
