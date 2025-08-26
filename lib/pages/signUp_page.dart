@@ -26,9 +26,7 @@ class _SignupPageState extends State<SignupPage> {
       ),
       bottomNavigationBar: MyBottomNav(
         currentIndex: 0,
-        onTap: (index) {
-          // navigation future
-        },
+        onTap: (index) {},
       ),
     );
   }
