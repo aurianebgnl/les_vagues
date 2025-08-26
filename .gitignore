@@ -12,11 +12,16 @@
 .swiftpm/
 migrate_working_dir/
 
-# IntelliJ related
+# Env files
+.env
+.env.*
+
+# IDE related
 *.iml
 *.ipr
 *.iws
 .idea/
+.vscode/
 
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line
@@ -32,6 +37,7 @@ migrate_working_dir/
 .pub/
 /build/
 /coverage/
+.packages
 
 # Symbolication related
 app.*.symbols
@@ -39,7 +45,31 @@ app.*.symbols
 # Obfuscation related
 app.*.map.json
 
+# Generated plugin registrant
+lib/generated_plugin_registrant.dart
+
 # Android Studio will place build artifacts here
 /android/app/debug
 /android/app/profile
 /android/app/release
+**/android/**/gradle-wrapper.jar
+**/android/.gradle
+**/android/captures/
+**/android/gradlew
+**/android/gradlew.bat
+**/android/local.properties
+**/android/.idea/
+
+# iOS
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/ephemeral/
+**/ios/.symlinks/
+**/ios/Pods/
+**/ios/Runner.xcworkspace/
+**/ios/.generated/
+
+
+# Web
+**/web/.dart_tool/

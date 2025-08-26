@@ -18,15 +18,11 @@ class DetailSpotPage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Image.network(spot.imageUrl),
-            Text("${spot.city}, ${spot.country}"),
-            Text("Note : ${spot.rating} /5"),
-            Text("Ajouté le : ${spot.dateAdded.toLocal()}".split(' ')[0]),
-            //SpotHeader(spot: spot),
-            //const SizedBox(height: 16),
-            //SpotDetails(spot: spot),
-            //const SizedBox(height: 16),
-            //SpotMap(spot: spot),
+            SpotHeader(spot: spot),
+            const SizedBox(height: 16),
+            SpotDetails(spot: spot),
+            const SizedBox(height: 16),
+            SpotMap(spot: spot),
           ],
         ),
       ),
@@ -98,7 +94,12 @@ class DetailSpotPage extends StatelessWidget {
         onTap: (index) {
           // navigation future
         },
+
         isLoggedIn: true, // change en true pour tester le cas connecté
     ));
+
+      ),
+    );
+
   }
 }
