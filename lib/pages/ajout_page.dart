@@ -6,6 +6,8 @@ import 'package:les_vagues/widgets/bottom_nav.dart';
 import 'package:les_vagues/widgets/top_nav.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 
 
 class AjoutSpotPage extends StatelessWidget{
@@ -86,6 +88,22 @@ class _AjoutSpotFormState extends State<AjoutSpotForm> {
     }
   }
 
+  Future<String?> _uploadImage(File image) async {
+    try {
+      final storageRef = FirebaseStorage.instance
+          .ref()
+          .child('spots/${DateTime.now().millisecondsSinceEpoch}.jpg');
+
+      final uploadTask = await storageRef.putFile(image);
+
+      final downloadUrl = await uploadTask.ref.getDownloadURL();
+      return downloadUrl;
+    } catch (e) {
+      print("Erreur upload Firebase: $e");
+      return null;
+    }
+  }
+
     // Champs séparés pour lisibilité
   Widget _buildDifficultyField() {
     return Column(
@@ -144,15 +162,27 @@ class _AjoutSpotFormState extends State<AjoutSpotForm> {
         ),
         const SizedBox(height: 8),
         _selectedImage == null
-            ? const Text("Pas d'image téléchargée",
-                style: TextStyle(fontStyle: FontStyle.italic))
-            : Image.file(_selectedImage!, height: 150),
+          ? const Text("Pas d'image téléchargée",
+              style: TextStyle(fontStyle: FontStyle.italic))
+          : kIsWeb
+              ? Image.network(_selectedImage!.path, height: 150)
+              : Image.file(_selectedImage!, height: 150),
       ],
     );
   }
 
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
+       String imageUrl = "";
+
+      // si une image locale est sélectionnée → on l’upload
+      if (_selectedImage != null) {
+        final uploadedUrl = await _uploadImage(_selectedImage!);
+        if (uploadedUrl != null) {
+          imageUrl = imageUrl;
+        }
+      }
+
       final spot = Spot(
         name: _nameController.text,
         city: _locationController.text,
