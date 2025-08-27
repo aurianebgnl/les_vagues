@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:les_vagues/widgets/custom_button.dart';
 
 class CustomInputField extends StatelessWidget {
   final TextEditingController controller;
@@ -211,25 +212,13 @@ class _InputSectionState extends State<InputSection> {
             margin: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.06,
             ),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(12)),
-                ),
-              ),
+            child: CustomButton(
               onPressed: _signUp,
-
-              child: const Text(
-                "S'enregistrer",
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              text: "S'enregistrer",
             ),
+
           ),
+          
         ],
       ),
     );

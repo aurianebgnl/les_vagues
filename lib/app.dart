@@ -12,20 +12,20 @@ import 'pages/list_page.dart';
 //import 'pages/ajout_page.dart';
 
 //TEMPORAIRE, avant de connecter à API ou BDD
-Spot hossegor = Spot(
-  name: "Hossegor",
-  city: "Hossegor",
-  country: "France",
-  imageUrl: "https://upload.wikimedia.org/wikipedia/commons/0/0a/Surf_at_Hossegor.jpg",
-  rating: 5,
+//Spot hossegor = Spot(
+  //name: "Hossegor",
+  //city: "Hossegor",
+  //country: "France",
+  //imageUrl: "https://upload.wikimedia.org/wikipedia/commons/0/0a/Surf_at_Hossegor.jpg",
+  //rating: 5,
   //rating: "★★★★☆ (123 votes)",
-  dateAdded: DateTime(2024, 8, 1),
+  //dateAdded: DateTime(2024, 8, 1),
   //dateAdded: "12/08/2023",
-  difficulty: "Intermédiaire",
-  waveType: "Reef Break",
-  season: "Juin - Septembre",
-  mapUrl: "https://upload.wikimedia.org/wikipedia/commons/0/0a/Surf_at_Hossegor.jpg",
-);
+  //difficulty: 2,
+  //waveType: "Reef Break",
+  //season: "Juin - Septembre",
+  //mapUrl: "https://upload.wikimedia.org/wikipedia/commons/0/0a/Surf_at_Hossegor.jpg",
+//);
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
