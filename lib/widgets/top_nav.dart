@@ -15,6 +15,7 @@
   //}
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MyTopNav extends StatelessWidget implements PreferredSizeWidget {
   const MyTopNav({super.key});
@@ -27,8 +28,15 @@ class MyTopNav extends StatelessWidget implements PreferredSizeWidget {
       },
       child: AppBar(
         automaticallyImplyLeading: false, // => enlève la flèche par défaut
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Les Vagues'),
+        backgroundColor: const Color(0xFFFFF8F0),
+        title: Text(
+          'Les Vagues',
+          style: GoogleFonts.manrope(
+            color: const Color(0xFF2D918C), 
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
       ),
     );
   }

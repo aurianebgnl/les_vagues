@@ -7,8 +7,11 @@ import 'package:les_vagues/widgets/custom_button.dart';
 import 'package:les_vagues/widgets/custom_field_container.dart';
 import 'package:les_vagues/widgets/form_signup.dart';
 import 'package:les_vagues/widgets/top_nav.dart';
-import 'dart:io';
+import 'dart:typed_data';
+import 'dart:io' show File;
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class AjoutSpotPage extends StatelessWidget {
   //const AjoutSpotPage({super.key, required this.spot});
@@ -48,7 +51,9 @@ class _AjoutSpotFormState extends State<AjoutSpotForm> {
   String? _waveType;
   DateTime? _startDate;
   DateTime? _endDate;
-  File? _selectedImage;
+  
+  File? _selectedImageFile;     // pour mobile
+  Uint8List? _selectedImageBytes; // pour web
 
   // Sélection date
   Future<void> _selectDate(BuildContext context, bool isStart) async {
@@ -79,9 +84,37 @@ class _AjoutSpotFormState extends State<AjoutSpotForm> {
       imageQuality: 80, // compression
     );
     if (pickedFile != null) {
-      setState(() {
-        _selectedImage = File(pickedFile.path);
-      });
+      if (kIsWeb){
+        final bytes = await pickedFile.readAsBytes();
+        setState(() {
+          _selectedImageBytes = bytes;
+        });
+      } else {
+        setState(() {
+        _selectedImageFile = File(pickedFile.path);
+        });
+      }
+    }
+  }
+
+  Future<String?> _uploadImage() async {
+    try {
+      final storageRef = FirebaseStorage.instance
+          .ref()
+          .child('spots/${DateTime.now().millisecondsSinceEpoch}.jpg');
+      
+      if (kIsWeb && _selectedImageBytes != null) {
+        await storageRef.putData(_selectedImageBytes!);
+      } else if (_selectedImageFile != null) {
+        await storageRef.putFile(_selectedImageFile!);
+      } else {
+        return null;  // aucune image
+      }
+
+      return await storageRef.getDownloadURL();
+    } catch (e) {
+      print("Erreur upload Firebase: $e");
+      return null;
     }
   }
 
@@ -173,31 +206,55 @@ class _AjoutSpotFormState extends State<AjoutSpotForm> {
         ),
 
         const SizedBox(height: 8),
-        _selectedImage == null
-            ? const Text(
-                "Pas d'image téléchargée",
-                style: TextStyle(fontStyle: FontStyle.italic),
-              )
-            : Image.file(_selectedImage!, height: 150),
+
+        //_selectedImage == null
+            //? const Text(
+                //"Pas d'image téléchargée",
+                //style: TextStyle(fontStyle: FontStyle.italic),
+              //)
+            //: Image.file(_selectedImage!, height: 150),
+
+        if (_selectedImageBytes != null)
+          Image.memory(_selectedImageBytes!, height: 150)
+        else if (_selectedImageFile != null)
+          Image.file(_selectedImageFile!, height: 150)
+        else
+          const Text("Pas d'image téléchargée",
+                    style: TextStyle(fontStyle: FontStyle.italic)),    
+
       ],
     );
   }
 
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
+      String imageUrl = "";
+
+      // upload image si sélectionnée
+      final uploadedUrl = await _uploadImage();
+      if (uploadedUrl != null) {
+          imageUrl = uploadedUrl;
+      }
+
       final spot = Spot(
         name: _nameController.text,
         city: _locationController.text,
-        country:
-            "France", // TO DO à revoir avec le champ location : à séparer ou regrouper ?
-        imageUrl: _selectedImage?.path ?? "",
+
+        //country:
+            //"France", // TO DO à revoir avec le champ location : à séparer ou regrouper ?
+        //imageUrl: _selectedImage?.path ?? "",
         //rating: _difficulty,//.toInt(),
+
+        country: "France", // TO DO à revoir avec le champ location : à séparer ou regrouper ?
+        imageUrl: imageUrl, // pour stocker l'URL Firebase
+        //rating: _difficulty.toInt(),
+
         dateAdded: DateTime.now(),
         // dateAdded: DateTime.now().toIso8601String(),
         difficulty: _difficulty,
         waveType: _waveType ?? "",
-        season:
-            "${_startDate?.day}/${_startDate?.month} - ${_endDate?.day}/${_endDate?.month}",
+        peakSeasonStart: _startDate!, 
+        peakSeasonEnd: _endDate!,
         mapUrl: "",
       );
 
@@ -220,11 +277,6 @@ class _AjoutSpotFormState extends State<AjoutSpotForm> {
 
       // Pour test
       debugPrint("Spot ajouté: ${spot.name}, type: ${spot.waveType}");
-
-      // TO DO, à revoir pour envoi sur BDD ou provider
-      /* ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Spot ajouté avec succès ✅')),
-      ); */
     }
   }
 
@@ -242,6 +294,7 @@ class _AjoutSpotFormState extends State<AjoutSpotForm> {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
+
 
             // Champ Nom
             CustomInputField(
@@ -291,6 +344,7 @@ class _AjoutSpotFormState extends State<AjoutSpotForm> {
             // Bouton
             Center(
               child: CustomButton(onPressed: _submitForm, text: "Ajouter"),
+
             ),
           ],
         ),

@@ -1,6 +1,8 @@
+
 //import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+
 
 class Spot {
   final String name;
@@ -11,8 +13,9 @@ class Spot {
   final DateTime dateAdded;
   final int difficulty;
   final String waveType;
-  final String season;
-  final String mapUrl;
+  final DateTime peakSeasonStart;
+  final DateTime peakSeasonEnd;
+  final String? mapUrl;
 
   const Spot({
     required this.name,
@@ -23,13 +26,24 @@ class Spot {
     required this.dateAdded,
     required this.difficulty,
     required this.waveType,
-    required this.season,
-    required this.mapUrl,
+    required this.peakSeasonStart,
+    required this.peakSeasonEnd,
+    this.mapUrl,
   });
 
   /// Convertir un record Airtable en Spot
   factory Spot.fromAirtable(Map<String, dynamic> record) {
     final fields = (record['fields'] as Map<String, dynamic>? ?? {});
+    
+    final startRaw = fields['Peak Surf Season Begins'];
+    final endRaw   = fields['Peak Surf Season Ends'];
+
+    final startDate = startRaw != null ? DateTime.tryParse(startRaw) : null;
+    final endDate   = endRaw != null ? DateTime.tryParse(endRaw) : null;
+
+    if (startDate == null || endDate == null) {
+      throw Exception("Les champs Peak Surf Season Begins/Ends sont requis mais absents dans Airtable.");
+    }
 
     return Spot(
       name: fields['Destination'] ?? 'Sans nom',
@@ -47,10 +61,35 @@ class Spot {
       waveType: (fields['Surf Break'] != null && fields['Surf Break'].isNotEmpty)
           ? fields['Surf Break'][0]
           : '',
-      season:
-          "${fields['Peak Surf Season Begins'] ?? '?'} - ${fields['Peak Surf Season Ends'] ?? '?'}",
+      peakSeasonStart: startDate,
+      peakSeasonEnd: endDate,
       mapUrl: fields['Magic Seaweed Link'] ?? '',
     );
+  }
+
+  // Getter pour l’affichage du range saison
+  String get seasonLabel {
+    final startMonth = _monthName(peakSeasonStart.month);
+    final endMonth = _monthName(peakSeasonEnd.month);
+    return "$startMonth - $endMonth";
+  }
+
+  static String _monthName(int month) {
+    const months = [
+      "Janvier",
+      "Février",
+      "Mars",
+      "Avril",
+      "Mai",
+      "Juin",
+      "Juillet",
+      "Août",
+      "Septembre",
+      "Octobre",
+      "Novembre",
+      "Décembre"
+    ];
+    return months[month - 1];
   }
 
   // Helpers simples pour découper ville/pays
