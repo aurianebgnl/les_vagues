@@ -8,6 +8,7 @@ class SpotHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return Column(
       children: [
         Image.network(spot.imageUrl, fit: BoxFit.cover),
@@ -34,9 +35,11 @@ class SpotHeader extends StatelessWidget {
                   Text("⭐ ${spot.rating.toString()}",
                       //style: Theme.of(context).textTheme.subtitle1
                       ),
-                  Text("${spot.dateAdded.toLocal()}",
-                      //style: Theme.of(context).textTheme.caption
-                      ),
+                  Text(
+                    "${spot.dateAdded.day.toString().padLeft(2, '0')}-"
+                    "${spot.dateAdded.month.toString().padLeft(2, '0')}-"
+                    "${spot.dateAdded.year}",
+                  ),
                 ],
               ),
             ],

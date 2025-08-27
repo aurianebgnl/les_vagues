@@ -207,8 +207,8 @@ class _AjoutSpotFormState extends State<AjoutSpotForm> {
         // dateAdded: DateTime.now().toIso8601String(),
         difficulty: _difficulty.toString(),
         waveType: _waveType ?? "",
-        season:
-            "${_startDate?.day}/${_startDate?.month} - ${_endDate?.day}/${_endDate?.month}",
+        peakSeasonStart: _startDate!, 
+        peakSeasonEnd: _endDate!,
         mapUrl: "",
       );
       

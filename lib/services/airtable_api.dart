@@ -27,9 +27,15 @@ class AirtableApi {
       final records = data['records'] as List<dynamic>;
 
       // on mappe chaque record vers Spot
-      return records
-          .map((record) => Spot.fromAirtable(record as Map<String, dynamic>))
-          .toList();
+      return records.map((record) {
+        try {
+          return Spot.fromAirtable(record as Map<String, dynamic>);
+        } catch (e) {
+          // On log l'erreur pour ce record mais on ne bloque pas tout le reste
+          print("Erreur parsing spot: $e\nRecord: $record");
+          rethrow; // bloque complétement alternative : ignorer ce record
+        }
+      }).toList();
     } else {
       throw Exception('Erreur lors du chargement des spots: ${response.body}');
     }
@@ -49,8 +55,8 @@ class AirtableApi {
             "Photos": [
               {"url": spot.imageUrl}
             ],
-            "Peak Surf Season Begins": "2024-06-15", // TODO à mapper
-            "Peak Surf Season Ends": "2024-08-22",
+            "Peak Surf Season Begins": spot.peakSeasonStart.toIso8601String(),
+            "Peak Surf Season Ends": spot.peakSeasonEnd.toIso8601String(),
             "Magic Seaweed Link": spot.mapUrl,
             "Geocode": "TODO : à mapper si besoin",
           }
