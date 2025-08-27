@@ -44,7 +44,7 @@ class AirtableApi {
           "fields": {
             "Destination": spot.name,
             "Destination State/Country": "${spot.city}, ${spot.country}",
-            "Difficulty Level": spot.difficulty.length,
+            "Difficulty Level": spot.difficulty, //.length,
             "Surf Break": [spot.waveType],
             "Photos": [
               {"url": spot.imageUrl}

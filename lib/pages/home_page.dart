@@ -70,8 +70,8 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       if (option == "Le + récent") {
         spots.sort((a, b) => b.dateAdded.compareTo(a.dateAdded));
-      } else if (option == "La meilleure note") {
-        spots.sort((a, b) => b.rating.compareTo(a.rating));
+      //} else if (option == "La meilleure note") {
+        //spots.sort((a, b) => b.rating.compareTo(a.rating));
       } else if (option == "Par ordre alphabétique") {
         spots.sort((a, b) => a.city.compareTo(b.city)); //ou a.name si on veut par spot : à voir
       }
