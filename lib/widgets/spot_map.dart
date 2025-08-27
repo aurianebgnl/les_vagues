@@ -11,7 +11,9 @@ class SpotMap extends StatelessWidget {
     return Column(
       children: [
         const Text("Géolocalisation"),
-        Image.network(spot.mapUrl, fit: BoxFit.cover),
+        /* Image.network(
+          spot.mapUrl ?? "https://via.placeholder.com/400x200?text=Pas+de+carte",
+          fit: BoxFit.cover), */
       ],
     );
   }
