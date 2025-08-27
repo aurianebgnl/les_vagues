@@ -3,6 +3,9 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:les_vagues/models/spot.dart';
 import 'package:les_vagues/services/airtable_api.dart';
 import 'package:les_vagues/widgets/bottom_nav.dart';
+import 'package:les_vagues/widgets/custom_button.dart';
+import 'package:les_vagues/widgets/custom_field_container.dart';
+import 'package:les_vagues/widgets/form_signup.dart';
 import 'package:les_vagues/widgets/top_nav.dart';
 import 'dart:typed_data';
 import 'dart:io' show File;
@@ -10,8 +13,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
-
-class AjoutSpotPage extends StatelessWidget{
+class AjoutSpotPage extends StatelessWidget {
   //const AjoutSpotPage({super.key, required this.spot});
   const AjoutSpotPage({super.key});
 
@@ -22,17 +24,14 @@ class AjoutSpotPage extends StatelessWidget{
     return Scaffold(
       appBar: MyTopNav(),
       body: const AjoutSpotForm(),
-      bottomNavigationBar: MyBottomNav(
-        currentIndex: 0,
-        onTap: (index) {},
-      ),
+      bottomNavigationBar: MyBottomNav(currentIndex: 0, onTap: (index) {}),
     );
 
     throw UnimplementedError();
-  }  
+  }
 }
 
-class AjoutSpotForm extends StatefulWidget{
+class AjoutSpotForm extends StatefulWidget {
   const AjoutSpotForm({super.key});
 
   @override
@@ -43,12 +42,12 @@ class _AjoutSpotFormState extends State<AjoutSpotForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   // Controllers pour récupérer les textes
-  // TO DO : modifier location pour que l'utilisateur y entre une vraie adresse, 
-  //dont on viendra extraire ville, pays etc 
+  // TO DO : modifier location pour que l'utilisateur y entre une vraie adresse,
+  //dont on viendra extraire ville, pays etc
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
 
-  double _difficulty = 1.0; // valeur par défaut
+  int _difficulty = 1;
   String? _waveType;
   DateTime? _startDate;
   DateTime? _endDate;
@@ -119,50 +118,80 @@ class _AjoutSpotFormState extends State<AjoutSpotForm> {
     }
   }
 
-    // Champs séparés pour lisibilité
+  // Champs séparés pour lisibilité
   Widget _buildDifficultyField() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text("Difficulté"),
-        RatingBar.builder(
-          initialRating: _difficulty,
-          minRating: 1,
-          direction: Axis.horizontal,
-          allowHalfRating: false,
-          itemCount: 5,
-          itemBuilder: (context, _) =>
-              const Icon(Icons.star, color: Colors.amber),
-          onRatingUpdate: (rating) => setState(() => _difficulty = rating),
-        ),
-      ],
+    return CustomFieldContainer(
+      label: "Difficulté",
+      icon: Icons.star_rounded,
+      child: DropdownButtonFormField<String>(
+        value: _difficulty.toString(),
+        decoration: const InputDecoration(border: InputBorder.none),
+        items: ["1", "2", "3", "4", "5"]
+            .map(
+              (difficulty) => DropdownMenuItem(
+                value: difficulty,
+                child: Text(
+                  difficulty,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            )
+            .toList(),
+        onChanged: (value) => setState(() => _difficulty = int.parse(value!)),
+        validator: (value) =>
+            value == null ? "Veuillez choisir un niveau de difficulté" : null,
+      ),
     );
   }
 
   Widget _buildWaveTypeField() {
-    return DropdownButtonFormField<String>(
-      decoration: const InputDecoration(labelText: "Type de vague"),
-      value: _waveType,
-      items: ["Beach Break", "Reef Break", "Point Break", "Outer Bank"]
-          .map((wave) => DropdownMenuItem(value: wave, child: Text(wave)))
-          .toList(),
-      onChanged: (value) => setState(() => _waveType = value),
-      validator: (value) =>
-          value == null ? "Veuillez choisir un type de vague" : null,
+    return CustomFieldContainer(
+      label: "Type de vague",
+      icon: Icons.waves_rounded,
+      child: DropdownButtonFormField<String>(
+        value: _waveType,
+        decoration: const InputDecoration(border: InputBorder.none),
+        items: ["Beach Break", "Reef Break", "Point Break", "Outer Bank"]
+            .map(
+              (wave) => DropdownMenuItem(
+                value: wave,
+                child: Text(
+                  wave,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            )
+            .toList(),
+        onChanged: (value) => setState(() => _waveType = value),
+        validator: (value) =>
+            value == null ? "Veuillez choisir un type de vague" : null,
+      ),
     );
   }
 
   Widget _buildDateField(String label, DateTime? date, bool isStart) {
-    return TextFormField(
-      readOnly: true,
-      decoration: InputDecoration(
-        labelText: label,
-        hintText: date == null
-            ? "Choisir une date"
-            : "${date.day}/${date.month}/${date.year}",
+    return CustomFieldContainer(
+      label: label,
+      icon: Icons.calendar_month_rounded,
+      child: TextFormField(
+        readOnly: true,
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          hintText: date == null
+              ? "Choisir une date"
+              : "${date.day}/${date.month}/${date.year}",
+        ),
+        onTap: () => _selectDate(context, isStart),
+        validator: (value) => date == null ? "Veuillez choisir une date" : null,
       ),
-      onTap: () => _selectDate(context, isStart),
-      validator: (value) => date == null ? "Veuillez choisir une date" : null,
     );
   }
 
@@ -170,12 +199,21 @@ class _AjoutSpotFormState extends State<AjoutSpotForm> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ElevatedButton.icon(
+        CustomButton(
           onPressed: _pickImage,
-          icon: const Icon(Icons.add_a_photo),
-          label: const Text("Ajouter une photo"),
+          text: "Ajouter une photo",
+          icon: Icons.add_a_photo_rounded,
         ),
+
         const SizedBox(height: 8),
+
+        //_selectedImage == null
+            //? const Text(
+                //"Pas d'image téléchargée",
+                //style: TextStyle(fontStyle: FontStyle.italic),
+              //)
+            //: Image.file(_selectedImage!, height: 150),
+
         if (_selectedImageBytes != null)
           Image.memory(_selectedImageBytes!, height: 150)
         else if (_selectedImageFile != null)
@@ -183,6 +221,7 @@ class _AjoutSpotFormState extends State<AjoutSpotForm> {
         else
           const Text("Pas d'image téléchargée",
                     style: TextStyle(fontStyle: FontStyle.italic)),    
+
       ],
     );
   }
@@ -200,18 +239,25 @@ class _AjoutSpotFormState extends State<AjoutSpotForm> {
       final spot = Spot(
         name: _nameController.text,
         city: _locationController.text,
+
+        //country:
+            //"France", // TO DO à revoir avec le champ location : à séparer ou regrouper ?
+        //imageUrl: _selectedImage?.path ?? "",
+        //rating: _difficulty,//.toInt(),
+
         country: "France", // TO DO à revoir avec le champ location : à séparer ou regrouper ?
         imageUrl: imageUrl, // pour stocker l'URL Firebase
-        rating: _difficulty.toInt(),
+        //rating: _difficulty.toInt(),
+
         dateAdded: DateTime.now(),
         // dateAdded: DateTime.now().toIso8601String(),
-        difficulty: _difficulty.toString(),
+        difficulty: _difficulty,
         waveType: _waveType ?? "",
         peakSeasonStart: _startDate!, 
         peakSeasonEnd: _endDate!,
         mapUrl: "",
       );
-      
+
       try {
         await AirtableApi().createSpot(spot);
 
@@ -223,9 +269,9 @@ class _AjoutSpotFormState extends State<AjoutSpotForm> {
         }
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Erreur: $e")),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text("Erreur: $e")));
         }
       }
 
@@ -248,20 +294,26 @@ class _AjoutSpotFormState extends State<AjoutSpotForm> {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
+
+
             // Champ Nom
-            TextFormField(
+            CustomInputField(
               controller: _nameController,
-              decoration: const InputDecoration(hintText: 'Nom du spot'),
-              validator: (value) =>
-                  value == null || value.isEmpty ? 'Veuillez entrer un nom pour ce spot' : null,
+              label: "Nom du spot",
+              hintText: 'Nom du spot',
+              icon: Icons.place_rounded,
+              validator: (value) => value == null || value.isEmpty
+                  ? 'Veuillez entrer un nom pour ce spot'
+                  : null,
             ),
-            const SizedBox(height: 16),
-            
+            //const SizedBox(height: 16),
+
             // Champ Localisation
-            TextFormField(
+            CustomInputField(
               controller: _locationController,
-              decoration: const InputDecoration(hintText: 'Localisation'),
+              label: "Localisation",
+              hintText: 'Localisation',
+              icon: Icons.map_rounded,
               validator: (String? value) {
                 if (value == null || value.isEmpty) {
                   return 'Veuillez entrer un lieu pour votre spot';
@@ -291,10 +343,8 @@ class _AjoutSpotFormState extends State<AjoutSpotForm> {
 
             // Bouton
             Center(
-                child: ElevatedButton(
-                  onPressed: _submitForm,
-                  child: const Text('Ajouter'),
-                ),
+              child: CustomButton(onPressed: _submitForm, text: "Ajouter"),
+
             ),
           ],
         ),

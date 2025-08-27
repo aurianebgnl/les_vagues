@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:les_vagues/widgets/custom_button.dart';
 
 class CustomInputFieldLogin extends StatelessWidget {
   final TextEditingController controller;
@@ -195,24 +196,10 @@ class _InputSectionLoginState extends State<InputSectionLogin> {
             margin: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.06,
             ),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(12)),
-                ),
-              ),
+            child: CustomButton(
               onPressed: fakeLogin,
-
-              child: const Text(
-                "Valider",
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+               text: "Valider",
+            )
           ),
         ],
       ),

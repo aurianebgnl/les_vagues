@@ -41,12 +41,12 @@ class MyBottomNav extends StatelessWidget {
             Navigator.pushNamed(context, '/add');
             break;
           case 3: //sans firebase
-            if (isLoggedIn) {
-              Navigator.pushNamed(context, '/profile');
-            }else{
-              Navigator.pushNamed(context, '/login');
+            //if (isLoggedIn) {
+              //Navigator.pushNamed(context, '/profile');
+            //}else{
+              Navigator.pushNamed(context, '/auth');
               //Navigator.pushNamed(context, '/signUp');
-            }
+            //}
             break;
           //case 3: => avec firebase
             //final user = FirebaseAuth.instance.currentUser;
