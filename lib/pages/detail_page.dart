@@ -95,7 +95,11 @@ class DetailSpotPage extends StatelessWidget {
           // navigation future
         },
         isLoggedIn: true, // change en true pour tester le cas connecté
+
+      //)
+
       ),
+
     );
   }
 }

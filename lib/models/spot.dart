@@ -1,12 +1,17 @@
 
+//import 'dart:ffi';
+
+import 'package:flutter/material.dart';
+
+
 class Spot {
   final String name;
   final String city;
   final String country;
   final String imageUrl;
-  final int rating; 
+  //final int rating; // tu peux mettre double si tu veux gérer des notes
   final DateTime dateAdded;
-  final String difficulty;
+  final int difficulty;
   final String waveType;
   final DateTime peakSeasonStart;
   final DateTime peakSeasonEnd;
@@ -17,7 +22,7 @@ class Spot {
     required this.city,
     required this.country,
     required this.imageUrl,
-    required this.rating,
+    //required this.rating,
     required this.dateAdded,
     required this.difficulty,
     required this.waveType,
@@ -47,10 +52,12 @@ class Spot {
       imageUrl: (fields['Photos'] != null && fields['Photos'].isNotEmpty)
           ? fields['Photos'][0]['url']
           : '',
-      rating: fields['Difficulty Level'] ?? 0,
+      //rating: fields['Difficulty Level'] ?? 0,
       dateAdded: DateTime.tryParse(record['createdTime'] ?? '') ??
           DateTime.now(),
-      difficulty: fields['Difficulty Level']?.toString() ?? '',
+      difficulty: (fields['Difficulty Level'] is int)
+          ? fields['Difficulty Level']
+          : int.tryParse(fields['Difficulty Level']?.toString() ?? '1') ?? 1,
       waveType: (fields['Surf Break'] != null && fields['Surf Break'].isNotEmpty)
           ? fields['Surf Break'][0]
           : '',

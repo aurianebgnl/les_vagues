@@ -24,7 +24,7 @@ class SpotDetails extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(spot.difficulty),
+              Text(spot.difficulty.toString()),
               Text(spot.waveType),
               Text(spot.seasonLabel),
             ],
