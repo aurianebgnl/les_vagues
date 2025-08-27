@@ -20,7 +20,7 @@ final List<Spot> mockSpots = [
       city: "Biarritz",
       country: "France",
       imageUrl:
-          "https://commons.wikimedia.org/wiki/Special:FilePath/Biarritz%20-%20c%C3%B4te%20des%20Basques.jpg",
+          "https://commons.wikimedia.or2g/wiki/Special:FilePath/Biarritz%20-%20c%C3%B4te%20des%20Basques.jpg",
       rating: 4,
       dateAdded: DateTime(2024, 8, 1),
       difficulty: "***",
