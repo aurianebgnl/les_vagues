@@ -7,11 +7,14 @@ final List<Spot> mockSpots = [
       country: "France",
       imageUrl:
           "https://upload.wikimedia.org/wikipedia/commons/0/0a/Surf_at_Hossegor.jpg",
+
       //rating: 5,
       dateAdded: DateTime(2024, 8, 1),
       difficulty: 3,
+
       waveType: "Beach Break",
-      season: "Juin",
+      peakSeasonStart: DateTime(2024, 3, 1),
+      peakSeasonEnd: DateTime(2024, 6, 1),
       mapUrl:
           "https://upload.wikimedia.org/wikipedia/commons/0/0a/Surf_at_Hossegor.jpg",
     ),
@@ -20,12 +23,15 @@ final List<Spot> mockSpots = [
       city: "Biarritz",
       country: "France",
       imageUrl:
+
           "https://commons.wikimedia.org/wiki/Special:FilePath/Biarritz%20-%20c%C3%B4te%20des%20Basques.jpg",
       //rating: 4,
       dateAdded: DateTime(2024, 8, 1),
       difficulty: 2,
+
       waveType: "Beach Break",
-      season: "Mars",
+      peakSeasonStart: DateTime(2024, 3, 1),
+      peakSeasonEnd: DateTime(2024, 6, 1),
       mapUrl:
           " https://commons.wikimedia.org/wiki/Special:FilePath/Biarritz%20-%20c%C3%B4te%20des%20Basques.jpg",
     ),
@@ -35,11 +41,14 @@ final List<Spot> mockSpots = [
       country: "France",
       imageUrl:
           "https://commons.wikimedia.org/wiki/Special:FilePath/Lacanau%20oc%C3%A9an%20surfeurs%20(2).jpg",
+
       //rating: 4,
       dateAdded: DateTime(2024, 8, 1),
       difficulty: 5,
+
       waveType: "Beach Break",
-      season: "Juin",
+      peakSeasonStart: DateTime(2024, 3, 1),
+      peakSeasonEnd: DateTime(2024, 6, 1),
       mapUrl:
           "https://commons.wikimedia.org/wiki/Special:FilePath/Pointe_Parlementia_2019_Bas_PL3.jpg",
     ),
@@ -49,11 +58,14 @@ final List<Spot> mockSpots = [
       country: "France",
       imageUrl:
           "https://upload.wikimedia.org/wikipedia/commons/0/0a/Surf_at_Hossegor.jpg",
+
       //rating: 5,
       dateAdded: DateTime(2024, 8, 1),
       difficulty: 4,
+
       waveType: "Beach Break",
-      season: "Avril",
+      peakSeasonStart: DateTime(2024, 3, 1),
+      peakSeasonEnd: DateTime(2024, 6, 1),
       mapUrl:
           "https://commons.wikimedia.org/wiki/Special:FilePath/Lacanau%20oc%C3%A9an%20surfeurs%20(2).jpg",
     ),
@@ -66,8 +78,10 @@ final List<Spot> mockSpots = [
       //rating: 4,
       dateAdded: DateTime(2024, 8, 1),
       difficulty: 4,
+
       waveType: "Beach Break",
-      season: "Juin",
+      peakSeasonStart: DateTime(2024, 3, 1),
+      peakSeasonEnd: DateTime(2024, 6, 1),
       mapUrl:
           "https://commons.wikimedia.org/wiki/Special:FilePath/Anglet-cavaliers-beach-2014.jpg",
     ),
@@ -77,11 +91,14 @@ final List<Spot> mockSpots = [
       country: "France",
       imageUrl:
           "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/12/79/f0/30/plage-du-santocha.jpg?w=1200&h=1200&s=1",
+
       //rating: 3,
       dateAdded: DateTime(2024, 8, 1),
       difficulty: 2,
+
       waveType: "Beach Break",
-      season: "Juin",
+      peakSeasonStart: DateTime(2024, 3, 1),
+      peakSeasonEnd: DateTime(2024, 6, 1),
       mapUrl:
           "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/12/79/f0/30/plage-du-santocha.jpg?w=1200&h=1200&s=1",
     ),
@@ -95,7 +112,8 @@ final List<Spot> mockSpots = [
       dateAdded: DateTime(2024, 8, 1),
       difficulty: 3,
       waveType: "Beach Break",
-      season: "Juin",
+      peakSeasonStart: DateTime(2024, 3, 1),
+      peakSeasonEnd: DateTime(2024, 6, 1),
       mapUrl:
           "https://commons.wikimedia.org/wiki/Special:FilePath/Plage_de_la_Torche.jpg",
     ),
@@ -105,11 +123,14 @@ final List<Spot> mockSpots = [
       country: "France",
       imageUrl:
           "https://upload.wikimedia.org/wikipedia/commons/9/95/Quiberon_Surf.jpg",
+
       //rating: 5,
       dateAdded: DateTime(2024, 8, 1),
       difficulty: 4,
+
       waveType: "Beach Break",
-      season: "Septembre",
+      peakSeasonStart: DateTime(2024, 3, 1),
+      peakSeasonEnd: DateTime(2024, 6, 1),
       mapUrl:
           "https://upload.wikimedia.org/wikipedia/commons/9/95/Quiberon_Surf.jpg",
     ),
@@ -119,11 +140,14 @@ final List<Spot> mockSpots = [
       country: "France",
       imageUrl:
           "https://commons.wikimedia.org/wiki/Special:FilePath/Lafitenia%20Bay%20(25951790728).jpg",
+
       //rating: 3,
       dateAdded: DateTime(2024, 8, 1),
       difficulty: 3,
+
       waveType: "Beach Break",
-      season: "Juin",
+      peakSeasonStart: DateTime(2024, 3, 1),
+      peakSeasonEnd: DateTime(2024, 6, 1),
       mapUrl:
           "https://commons.wikimedia.org/wiki/Special:FilePath/Lafitenia%20Bay%20(25951790728).jpg",
     ),
@@ -133,11 +157,14 @@ final List<Spot> mockSpots = [
       country: "France",
       imageUrl:
           "https://www.seignosse-surf-school.com/wp-content/uploads/2020/05/seignosse_surf_school_ecole_de_surf_LA_NORD-800x534.jpg",
+
       //rating: 5,
       dateAdded: DateTime(2024, 8, 1),
       difficulty: 4,
+
       waveType: "Beach Break",
-      season: "Juin",
+      peakSeasonStart: DateTime(2024, 3, 1),
+      peakSeasonEnd: DateTime(2024, 6, 1),
       mapUrl:
           "https://www.seignosse-surf-school.com/wp-content/uploads/2020/05/seignosse_surf_school_ecole_de_surf_LA_NORD-800x534.jpg",
     ),

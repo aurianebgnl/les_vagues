@@ -1,15 +1,13 @@
 //MaterialApp, thèmes, routes globales
 
 import 'package:flutter/material.dart';
-import 'package:les_vagues/models/spot.dart';
 import 'package:les_vagues/pages/ajout_page.dart';
 import 'package:les_vagues/pages/auth_page.dart';
 import 'package:les_vagues/pages/login_page.dart';
 import 'package:les_vagues/pages/profile_page.dart';
 import 'pages/home_page.dart';
-import 'pages/signup_page.dart';
-import 'pages/list_page.dart';
 //import 'pages/ajout_page.dart';
+
 
 //TEMPORAIRE, avant de connecter à API ou BDD
 //Spot hossegor = Spot(
@@ -36,7 +34,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Les Vagues',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF2D918C)),
       ),
 
       initialRoute: '/', // Page de démarrage

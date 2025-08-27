@@ -26,7 +26,7 @@ class SpotDetails extends StatelessWidget {
             children: [
               Text(spot.difficulty.toString()),
               Text(spot.waveType),
-              Text(spot.season),
+              Text(spot.seasonLabel),
             ],
           ),
         ],
