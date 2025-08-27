@@ -4,10 +4,11 @@ import 'package:les_vagues/models/spot.dart';
 import 'package:les_vagues/services/airtable_api.dart';
 import 'package:les_vagues/widgets/bottom_nav.dart';
 import 'package:les_vagues/widgets/top_nav.dart';
-import 'dart:io';
+import 'dart:typed_data';
+import 'dart:io' show File;
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 
 class AjoutSpotPage extends StatelessWidget{
@@ -51,7 +52,9 @@ class _AjoutSpotFormState extends State<AjoutSpotForm> {
   String? _waveType;
   DateTime? _startDate;
   DateTime? _endDate;
-  File? _selectedImage;
+  
+  File? _selectedImageFile;     // pour mobile
+  Uint8List? _selectedImageBytes; // pour web
 
   // Sélection date
   Future<void> _selectDate(BuildContext context, bool isStart) async {
@@ -82,22 +85,34 @@ class _AjoutSpotFormState extends State<AjoutSpotForm> {
       imageQuality: 80, // compression
     );
     if (pickedFile != null) {
-      setState(() {
-        _selectedImage = File(pickedFile.path);
-      });
+      if (kIsWeb){
+        final bytes = await pickedFile.readAsBytes();
+        setState(() {
+          _selectedImageBytes = bytes;
+        });
+      } else {
+        setState(() {
+        _selectedImageFile = File(pickedFile.path);
+        });
+      }
     }
   }
 
-  Future<String?> _uploadImage(File image) async {
+  Future<String?> _uploadImage() async {
     try {
       final storageRef = FirebaseStorage.instance
           .ref()
           .child('spots/${DateTime.now().millisecondsSinceEpoch}.jpg');
+      
+      if (kIsWeb && _selectedImageBytes != null) {
+        await storageRef.putData(_selectedImageBytes!);
+      } else if (_selectedImageFile != null) {
+        await storageRef.putFile(_selectedImageFile!);
+      } else {
+        return null;  // aucune image
+      }
 
-      final uploadTask = await storageRef.putFile(image);
-
-      final downloadUrl = await uploadTask.ref.getDownloadURL();
-      return downloadUrl;
+      return await storageRef.getDownloadURL();
     } catch (e) {
       print("Erreur upload Firebase: $e");
       return null;
@@ -161,33 +176,32 @@ class _AjoutSpotFormState extends State<AjoutSpotForm> {
           label: const Text("Ajouter une photo"),
         ),
         const SizedBox(height: 8),
-        _selectedImage == null
-          ? const Text("Pas d'image téléchargée",
-              style: TextStyle(fontStyle: FontStyle.italic))
-          : kIsWeb
-              ? Image.network(_selectedImage!.path, height: 150)
-              : Image.file(_selectedImage!, height: 150),
+        if (_selectedImageBytes != null)
+          Image.memory(_selectedImageBytes!, height: 150)
+        else if (_selectedImageFile != null)
+          Image.file(_selectedImageFile!, height: 150)
+        else
+          const Text("Pas d'image téléchargée",
+                    style: TextStyle(fontStyle: FontStyle.italic)),    
       ],
     );
   }
 
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
-       String imageUrl = "";
+      String imageUrl = "";
 
-      // si une image locale est sélectionnée → on l’upload
-      if (_selectedImage != null) {
-        final uploadedUrl = await _uploadImage(_selectedImage!);
-        if (uploadedUrl != null) {
-          imageUrl = imageUrl;
-        }
+      // upload image si sélectionnée
+      final uploadedUrl = await _uploadImage();
+      if (uploadedUrl != null) {
+          imageUrl = uploadedUrl;
       }
 
       final spot = Spot(
         name: _nameController.text,
         city: _locationController.text,
         country: "France", // TO DO à revoir avec le champ location : à séparer ou regrouper ?
-        imageUrl: _selectedImage?.path ?? "",
+        imageUrl: imageUrl, // pour stocker l'URL Firebase
         rating: _difficulty.toInt(),
         dateAdded: DateTime.now(),
         // dateAdded: DateTime.now().toIso8601String(),
@@ -217,11 +231,6 @@ class _AjoutSpotFormState extends State<AjoutSpotForm> {
 
       // Pour test
       debugPrint("Spot ajouté: ${spot.name}, type: ${spot.waveType}");
-
-      // TO DO, à revoir pour envoi sur BDD ou provider
-      /* ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Spot ajouté avec succès ✅')),
-      ); */
     }
   }
 
@@ -231,65 +240,65 @@ class _AjoutSpotFormState extends State<AjoutSpotForm> {
       key: _formKey,
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          const Text(
-            "Ajouter un spot",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 16),
-          
-          // Champ Nom
-          TextFormField(
-            controller: _nameController,
-            decoration: const InputDecoration(hintText: 'Nom du spot'),
-            validator: (value) =>
-                value == null || value.isEmpty ? 'Veuillez entrer un nom pour ce spot' : null,
-          ),
-          const SizedBox(height: 16),
-          
-          // Champ Localisation
-          TextFormField(
-            controller: _locationController,
-            decoration: const InputDecoration(hintText: 'Localisation'),
-            validator: (String? value) {
-              if (value == null || value.isEmpty) {
-                return 'Veuillez entrer un lieu pour votre spot';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            const Text(
+              "Ajouter un spot",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 16),
+            
+            // Champ Nom
+            TextFormField(
+              controller: _nameController,
+              decoration: const InputDecoration(hintText: 'Nom du spot'),
+              validator: (value) =>
+                  value == null || value.isEmpty ? 'Veuillez entrer un nom pour ce spot' : null,
+            ),
+            const SizedBox(height: 16),
+            
+            // Champ Localisation
+            TextFormField(
+              controller: _locationController,
+              decoration: const InputDecoration(hintText: 'Localisation'),
+              validator: (String? value) {
+                if (value == null || value.isEmpty) {
+                  return 'Veuillez entrer un lieu pour votre spot';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 16),
 
-          // Champ difficulté
-          _buildDifficultyField(),
-          const SizedBox(height: 16),
+            // Champ difficulté
+            _buildDifficultyField(),
+            const SizedBox(height: 16),
 
-          // Champ type de vague
-          _buildWaveTypeField(),
-          const SizedBox(height: 16),
+            // Champ type de vague
+            _buildWaveTypeField(),
+            const SizedBox(height: 16),
 
-          // Champ Saison
-          _buildDateField("Début de saison", _startDate, true),
-          const SizedBox(height: 16),
-          _buildDateField("Fin de saison", _endDate, false),
-          const SizedBox(height: 16),
+            // Champ Saison
+            _buildDateField("Début de saison", _startDate, true),
+            const SizedBox(height: 16),
+            _buildDateField("Fin de saison", _endDate, false),
+            const SizedBox(height: 16),
 
-          // Champ Image
-          _buildImagePicker(),
-          const SizedBox(height: 16),
+            // Champ Image
+            _buildImagePicker(),
+            const SizedBox(height: 16),
 
-          // Bouton
-          Center(
-              child: ElevatedButton(
-                onPressed: _submitForm,
-                child: const Text('Ajouter'),
-              ),
-          ),
-        ],
+            // Bouton
+            Center(
+                child: ElevatedButton(
+                  onPressed: _submitForm,
+                  child: const Text('Ajouter'),
+                ),
+            ),
+          ],
+        ),
       ),
-    ),
     );
   }
 }
