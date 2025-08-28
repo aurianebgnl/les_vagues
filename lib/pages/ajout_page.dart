@@ -24,7 +24,7 @@ class AjoutSpotPage extends StatelessWidget {
     return Scaffold(
       appBar: MyTopNav(),
       body: const AjoutSpotForm(),
-      bottomNavigationBar: MyBottomNav(currentIndex: 0, onTap: (index) {}),
+      // bottomNavigationBar: MyBottomNav(currentIndex: 0, onTap: (index) {}),
     );
 
     throw UnimplementedError();
