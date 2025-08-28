@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:les_vagues/models/spot.dart';
-import 'package:les_vagues/widgets/bottom_nav.dart';
 import 'package:les_vagues/widgets/spot_header.dart';
 import 'package:les_vagues/widgets/spot_map.dart';
 import 'package:les_vagues/widgets/top_nav.dart';
