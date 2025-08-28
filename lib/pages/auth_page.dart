@@ -53,11 +53,7 @@ class _AuthPageState extends State<AuthPage> {
           ],
         ),
       ),
-      bottomNavigationBar: MyBottomNav(
-        currentIndex: 0,
-        onTap: (index) {},
-        isLoggedIn: isLogin ? true : false, // facultatif selon ton usage
-      ),
+      
     );
   }
 }
