@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:les_vagues/widgets/bottom_nav.dart';
 import 'package:les_vagues/widgets/top_nav.dart';
 
 class ProfilePage extends StatefulWidget {

@@ -1,12 +1,12 @@
 //MaterialApp, thèmes, routes globales
 
 import 'package:flutter/material.dart';
-import 'package:les_vagues/pages/ajout_page.dart';
-import 'package:les_vagues/pages/auth_page.dart';
-import 'package:les_vagues/pages/login_page.dart';
-import 'package:les_vagues/pages/profile_page.dart';
-import 'package:les_vagues/widgets/main_scaffold.dart';
-import 'pages/home_page.dart';
+// import 'package:les_vagues/pages/ajout_page.dart';
+// import 'package:les_vagues/pages/auth_page.dart';
+// import 'package:les_vagues/pages/login_page.dart';
+// import 'package:les_vagues/pages/profile_page.dart';
+ import 'package:les_vagues/widgets/main_scaffold.dart';
+// import 'pages/home_page.dart';
 //import 'pages/ajout_page.dart';
 
 

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:les_vagues/widgets/bottom_nav.dart';
 import 'package:les_vagues/widgets/top_nav.dart';
 import 'package:les_vagues/widgets/form_login.dart';
 import 'package:les_vagues/widgets/form_signup.dart';
