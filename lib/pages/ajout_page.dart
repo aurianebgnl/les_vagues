@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:les_vagues/models/spot.dart';
 import 'package:les_vagues/services/airtable_api.dart';
-import 'package:les_vagues/widgets/bottom_nav.dart';
 import 'package:les_vagues/widgets/custom_button.dart';
 import 'package:les_vagues/widgets/custom_field_container.dart';
 import 'package:les_vagues/widgets/form_signup.dart';
@@ -24,7 +23,7 @@ class AjoutSpotPage extends StatelessWidget {
     return Scaffold(
       appBar: MyTopNav(),
       body: const AjoutSpotForm(),
-      bottomNavigationBar: MyBottomNav(currentIndex: 0, onTap: (index) {}),
+      // bottomNavigationBar: MyBottomNav(currentIndex: 0, onTap: (index) {}),
     );
 
     throw UnimplementedError();

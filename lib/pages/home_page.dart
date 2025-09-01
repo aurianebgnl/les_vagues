@@ -1,8 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:les_vagues/widgets/bottom_nav.dart';
+import 'package:les_vagues/widgets/filter_bar.dart';
 import 'package:les_vagues/widgets/top_nav.dart';
 import 'package:les_vagues/widgets/dropdown_menu.dart';
+import 'package:les_vagues/widgets/search_bar.dart';
 import 'package:les_vagues/models/spot.dart';
 import 'package:les_vagues/pages/detail_page.dart';
 import 'package:les_vagues/data/mock_spots.dart';
@@ -34,9 +35,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   @override
-    void dispose() {
-      _controller.dispose(); // libération mémoire
-      super.dispose();
+  void dispose() {
+    _controller.dispose(); // libération mémoire
+    super.dispose();
   }
 
   Future<void> _loadSpots() async {
@@ -54,7 +55,8 @@ class _MyHomePageState extends State<MyHomePage> {
         allSpots = List.from(mockSpots);
         spots = List.from(mockSpots);
         isLoading = false;
-        errorMessage = "Pas de connexion Internet - affichage des données locales";
+        errorMessage =
+            "Pas de connexion Internet - affichage des données locales";
       });
     } catch (e) {
       setState(() {
@@ -70,10 +72,28 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       if (option == "Le + récent") {
         spots.sort((a, b) => b.dateAdded.compareTo(a.dateAdded));
+        
       } else if (option == "La plus difficile") {
         spots.sort((a, b) => b.difficulty.compareTo(a.difficulty));
       } else if (option == "Par ordre alphabétique") {
-        spots.sort((a, b) => a.city.compareTo(b.city)); //ou a.name si on veut par spot : à voir
+        spots.sort(
+          (a, b) => a.city.compareTo(b.city),
+        ); //ou a.name si on veut par spot : à voir
+      }
+    });
+  }
+
+  void _applySearch(String query) {
+    setState(() {
+      searchQuery = query;
+      if (query.isEmpty) {
+        spots = allSpots;
+      } else {
+        spots = allSpots.where((spot) {
+          return spot.name.toLowerCase().contains(query.toLowerCase()) ||
+              spot.city.toLowerCase().contains(query.toLowerCase()) ||
+              spot.country.toLowerCase().contains(query.toLowerCase());
+        }).toList();
       }
     });
   }
@@ -85,122 +105,68 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Column(
         children: [
           // Barre de recherche
-          Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    controller: _controller,
-                    decoration: InputDecoration(
-                      hintText: "Rechercher...",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.search),
-                onPressed: () {
-                  setState(() {
-                    searchQuery = _controller.text;
-
-                    if (searchQuery.isEmpty) {
-                      spots = allSpots;
-                    } else {
-                      spots = allSpots.where((spot) {
-                        return spot.name.toLowerCase().contains(
-                              searchQuery.toLowerCase(),
-                            ) ||
-                            spot.city.toLowerCase().contains(
-                              searchQuery.toLowerCase(),
-                            ) ||
-                            spot.country.toLowerCase().contains(
-                              searchQuery.toLowerCase(),
-                            );
-                      }).toList();
-                    }
-                  });
-                  print("Recherche : $searchQuery");
-                },
-              ),
-            ],
+          MySearchBar(controller: _controller, onSearch: _applySearch),
+          FilterBar(
+            selectedFilter: selectedFilter,
+            onChanged: (value) {
+              setState(() => selectedFilter = value ?? "Filtrer");
+              _applyFilter(selectedFilter);
+            },
           ),
-
-          // Filtrage
-          Row(
-            children: [
-              Text('Affichage : $selectedFilter'),
-              const Spacer(),
-              MyDropdownMenu(
-                initialValue: selectedFilter,
-                onSelected: (value) {
-                  setState(() {
-                    selectedFilter = value ?? "Filtrer";
-                  });
-                  _applyFilter(selectedFilter);
-                  print("Filtre choisi : $selectedFilter");
-                },
-              ),
-            ],
-          ),
-
-          // La grille des spots
           Expanded(
-            child: spots.isEmpty
-              ? const Center(
-                child: Text(
-                  "Aucun spot trouvé",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              )
-            : GridView.count(
-              crossAxisCount: 2,
-              crossAxisSpacing: 8,
-              mainAxisSpacing: 8,
-              padding: const EdgeInsets.all(8),
-              children: spots.map((spot) {
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DetailSpotPage(spot: spot),
-                      ),
-                    );
-                  },
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.network(
-                        spot.imageUrl,
-                        width: 150,
-                        height: 100,
-                        fit: BoxFit.cover,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        '${spot.city}, ${spot.country}',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Text(spot.name),
-                    ],
-                  ),
-                );
-              }).toList(),
-            ),
+            child: isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : spots.isEmpty
+                ? const Center(child: Text("Aucun spot trouvé"))
+                : SpotsGrid(spots: spots),
           ),
         ],
       ),
-      bottomNavigationBar: MyBottomNav(
-        currentIndex: 0,
-        onTap: (index) {
-          // navigation future
-        },
-        isLoggedIn: true, // change en true pour tester le cas connecté
-      ),
+    );
+  }
+}
+
+class SpotsGrid extends StatelessWidget {
+  final List<Spot> spots;
+
+  const SpotsGrid({super.key, required this.spots});
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.count(
+      crossAxisCount: 2,
+      crossAxisSpacing: 8,
+      mainAxisSpacing: 8,
+      padding: const EdgeInsets.all(8),
+      children: spots.map((spot) {
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DetailSpotPage(spot: spot),
+              ),
+            );
+          },
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.network(
+                spot.imageUrl,
+                width: 150,
+                height: 100,
+                fit: BoxFit.cover,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                '${spot.city}, ${spot.country}',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Text(spot.name),
+            ],
+          ),
+        );
+      }).toList(),
     );
   }
 }

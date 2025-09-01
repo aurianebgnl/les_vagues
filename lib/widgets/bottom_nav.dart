@@ -23,41 +23,7 @@ class MyBottomNav extends StatelessWidget {
       currentIndex: currentIndex,
       selectedItemColor: const Color(0xFF2D918C),
       unselectedItemColor: Colors.black,
-      showSelectedLabels: true,
-      showUnselectedLabels: true,
-      onTap: (index) {
-        // tu déclenches ton callback pour mettre à jour l’état
-        onTap(index);
-
-        // et tu peux aussi gérer la navigation ici
-        switch (index) {
-          case 0:
-            Navigator.pushNamed(context, '/');
-            break;
-          case 1:
-            Navigator.pushNamed(context, '/search');
-            break;
-          case 2:
-            Navigator.pushNamed(context, '/add');
-            break;
-          case 3: //sans firebase
-            //if (isLoggedIn) {
-              //Navigator.pushNamed(context, '/profile');
-            //}else{
-              Navigator.pushNamed(context, '/auth');
-              //Navigator.pushNamed(context, '/signUp');
-            //}
-            break;
-          //case 3: => avec firebase
-            //final user = FirebaseAuth.instance.currentUser;
-            //if (user != null) {
-              //Navigator.pushNamed(context, '/profile');
-            //} else {
-              //Navigator.pushNamed(context, '/login');
-            //}
-            //break;
-          }
-        },
+      onTap: onTap,
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Accueil'),
         BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Rechercher'),
