@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 const List<String> list = <String>[
   'Filtrer',
   'Le + récent',
-  'Le plus difficile',
+  'La plus difficile',
   'Par ordre alphabétique',
 ];
 
