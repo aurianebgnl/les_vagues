@@ -72,7 +72,8 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       if (option == "Le + récent") {
         spots.sort((a, b) => b.dateAdded.compareTo(a.dateAdded));
-      } else if (option == "Le plus difficile") {
+        
+      } else if (option == "La plus difficile") {
         spots.sort((a, b) => b.difficulty.compareTo(a.difficulty));
       } else if (option == "Par ordre alphabétique") {
         spots.sort(

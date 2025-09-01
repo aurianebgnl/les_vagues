@@ -40,7 +40,9 @@ class SpotHeader extends StatelessWidget {
                       //style: Theme.of(context).textTheme.caption
                      // ),
 
+
                      // ),
+
                   Text(
                     "${spot.dateAdded.day.toString().padLeft(2, '0')}-"
                     "${spot.dateAdded.month.toString().padLeft(2, '0')}-"
